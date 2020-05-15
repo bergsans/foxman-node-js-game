@@ -1,7 +1,8 @@
 const { 
   drawLogo,
   drawMenu,
-  drawState
+  drawState,
+  fps
 } = require('./draw');
 const nextState = require('./logic');
 const cliCursor = require('cli-cursor');
@@ -16,8 +17,7 @@ const initialState = {
 };
 cliCursor.hide();
 
-
-
+// Game-loop
 const gameLoop = (state) => {
   console.clear();
   drawLogo();
@@ -25,9 +25,6 @@ const gameLoop = (state) => {
   drawState(state.level);
   state = nextState(state, events);
   events.reset();
-  setTimeout(
-    () => gameLoop(state), 
-    1000 / 30
-  );
+  setTimeout(() => gameLoop(state), fps);
 };
 gameLoop(initialState);

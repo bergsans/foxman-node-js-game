@@ -2,7 +2,7 @@ const chalk = require('chalk');
 
 const menu = `
 ┌─────────────────────────────────────────────────────┐
-│  q: quit                                            │
+│  q: quit  ◈  r: restart                             │
 └─────────────────────────────────────────────────────┘
 `;
 const logo = chalk.red(`

@@ -1,26 +1,26 @@
 const readline = require('readline');
 
-const commands = ['q', 'up', 'right', 'down', 'left'];
+const commands = ['q', 'r', 'up', 'right', 'down', 'left'];
 const defaultEventState = () => ({
   down: false,
   up: false,
   right: false,
-  left: false
+  left: false,
+  r: false,
+  q: false
 });
 const eventHandler = () => {
   let events = { ...defaultEventState() };
   const setEvent = (key) => {
-    if(key === 'q') { process.exit(0); }
     events = { ...defaultEventState() };
     events[key] = true;
-    console.log(events)
   };
   const handleKeyEvent = (_, key) => commands.includes(key.name) && setEvent(key.name); 
   process.stdin.setRawMode(true);
   readline.emitKeypressEvents(process.stdin);
   process.stdin.on('keypress', handleKeyEvent);
   return {
-    getValue: () => ({ ...events }),
+    getValues: () => ({ ...events }),
     reset: () => events = defaultEventState()
   };
 }

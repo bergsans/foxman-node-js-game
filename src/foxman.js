@@ -5,20 +5,17 @@ const {
   fps
 } = require('./draw');
 const nextState = require('./logic');
-const cliCursor = require('cli-cursor');
-
-// Init game
-const level = require('./init-level')();
-const initCreatures = require('./init-creatures')(level);
 const events = require('./event-handlers')();
-const initialState = {
-  level,
-  ...initCreatures
-};
-cliCursor.hide();
+const initialState = require('./init-game');
 
 // Game-loop
 const gameLoop = (state) => {
+  const { q, r } = events.getValues();
+  if(q || r) {
+    q && process.exit();
+    state = { ...initialState };
+    events.reset();
+  }
   console.clear();
   drawLogo();
   drawMenu();

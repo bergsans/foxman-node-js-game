@@ -1,40 +1,29 @@
-const rawLevel = require('./level');
-const level = require('./init-level')(rawLevel);
-const readline = require('readline');
-const printState = require('./print-state');
-const initCreatures = require('./init-creatures');
-const { defaultEventState } = require('./event-helpers');
-require('cli-cursor').hide();
+const { 
+  drawLogo,
+  drawMenu,
+  drawState
+} = require('./draw');
+const nextState = require('./logic');
+const cliCursor = require('cli-cursor');
 
-// side-effects (keyboard navigation and quit)
-let events = { ...defaultEventState() };
-const setEvent = (key) => {
-  if(key === 'q') { process.exit(0); }
-  events = { ...defaultEventState() };
-  events[key] = true;
-};
-const commands = ['q', 'up', 'right', 'down', 'left'];
-const handleKeyEvent = (_, key) => commands.includes(key.name) && setEvent(key.name); 
-process.stdin.setRawMode(true);
-readline.emitKeypressEvents(process.stdin);
-process.stdin.on('keypress', handleKeyEvent);
-const creatures = initCreatures(level);
-const monsters = creatures.filter(c => c.type === 'm');
-const [plr] = creatures.filter(c => c.type === 'f');
-
-// main logic
+// Init game
+const level = require('./init-level')();
+const initCreatures = require('./init-creatures')(level);
+const events = require('./event-handlers')();
 const initialState = {
   level,
-  monsters: monsters.reduce((ms, m, i) => ({ ...ms, [i]: m }), {}),
-  plr
+  ...initCreatures
 };
-const nextState = (state, e) => state;
+cliCursor.hide();
+
+
+
 const gameLoop = (state) => {
   console.clear();
-  console.log(events);
+  console.log(events.getValue());
   console.log(state.plr, state.monsters)
   state = nextState(state, events);
-  events = { ...defaultEventState() };
+  events.reset();
   setTimeout(
     () => gameLoop(state), 
     1000 / 30

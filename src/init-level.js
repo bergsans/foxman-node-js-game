@@ -1,4 +1,6 @@
-const initLevel = (rawLevel) => rawLevel
+const rawLevel = require('./level');
+
+const initLevel = () => rawLevel
   .trim()
   .split('\n')
   .map(row => row.split(''));

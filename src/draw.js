@@ -1,7 +1,7 @@
 const { types, logo, menu } = require('./graphics');
 const determineType = (type) => types[type];
-const drawState = (array) => console.log(
-    array
+const drawState = (level) => console.log(
+    level
         .map(
             (row) => row
                 .map(determineType) 

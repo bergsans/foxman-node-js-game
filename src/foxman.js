@@ -20,8 +20,9 @@ cliCursor.hide();
 
 const gameLoop = (state) => {
   console.clear();
-  console.log(events.getValue());
-  console.log(state.plr, state.monsters)
+  drawLogo();
+  drawMenu();
+  drawState(state.level);
   state = nextState(state, events);
   events.reset();
   setTimeout(

@@ -21,6 +21,7 @@ const types = {
   m:     '👹',
   f:     '🦊',
   ' ':   chalk.yellow('..'),
+  floor:   'oo',
   score: '💎',
 };
 module.exports = {

@@ -21,7 +21,11 @@ const eventHandler = () => {
   process.stdin.on('keypress', handleKeyEvent);
   return {
     getValues: () => ({ ...events }),
-    reset: () => events = defaultEventState()
+    reset: () => events = defaultEventState(),
+    getMoveDirection: () => Object.entries(events).reduce(
+      (moveDirection, [ direction, status ]) => moveDirection = status ? direction : moveDirection
+      ,false
+    )
   };
 }
 module.exports = eventHandler;

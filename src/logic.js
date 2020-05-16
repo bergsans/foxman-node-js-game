@@ -5,9 +5,10 @@ const {
   FOX,
   WALL,
   FLOOR,
+  CREDITS,
 } = require('./constants');
 
-const isMovePossible = (level, plr, moveX, moveY) => level[plr.y + moveY][plr.x + moveX] !== WALL;
+const isMovePossible = (state, moveX, moveY) => state.level[state.player.y + moveY][state.player.x + moveX] !== WALL;
 
 const isMovingInDirection = (direction) => direction === true;
 
@@ -15,26 +16,36 @@ const isPlayerAttemptingToMove = (e) => Object.values(e).some(isMovingInDirectio
 
 const copyLevel = (level) => level.map((row) => [...row]);
 
-const nextState = (state, e) => {
-  let { player, score, monsters } = state;
-  const level = copyLevel(state.level);
-  if (isPlayerAttemptingToMove(e.getValues())) {
-    const [moveX, moveY] = MOVE_DIRECTIONS[e.getMoveDirection()];
-    if (isMovePossible(level, player, moveX, moveY)) {
-      level[player.y][player.x] = FLOOR;
-      player = {
-        x: player.x + moveX,
-        y: player.y + moveY,
-      };
-      level[player.y][player.x] = FOX;
-      score += 1;
-    }
+const attemptMove = (state, level, [moveX, moveY]) => {
+  if (isMovePossible(state, moveX, moveY)) {
+    const x = state.player.x + moveX;
+    const y = state.player.y + moveY;
+    const score = level[y][x] === CREDITS
+      ? state.score + 1
+      : state.score;
+    level[state.player.y][state.player.x] = FLOOR;
+    level[y][x] = FOX;
+    const newState = {
+      ...state,
+      player: {
+        x,
+        y,
+      },
+      score,
+      level,
+    };
+    return newState;
   }
+  return { ...state };
+};
+
+const nextState = (state, e) => {
+  const newLevel = copyLevel(state.level);
+  const playerTurn = isPlayerAttemptingToMove(e.getValues())
+    ? attemptMove(state, newLevel, MOVE_DIRECTIONS[e.getMoveDirection()])
+    : state;
   return {
-    level,
-    monsters,
-    player,
-    score,
+    ...playerTurn,
     time: state.time - UPDATE_VARIANT,
   };
 };

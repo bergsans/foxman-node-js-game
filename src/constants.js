@@ -13,6 +13,8 @@ const FLOOR = 'd';
 
 const WALL = 'x';
 
+const CREDITS = ' ';
+
 const MONSTER = 'm';
 
 const ONE_SECOND = 1000;
@@ -29,5 +31,6 @@ module.exports = {
   MONSTER,
   FPS,
   ALIVE,
+  CREDITS,
   UPDATE_VARIANT,
 };

@@ -21,4 +21,5 @@ x xxx x xx xxxxxxxx x x   x
 x x   x x  x        x x xxx
 xxxxxxxxxxxxxxxxxxxxxxxxxxx
 `;
+
 module.exports = level;

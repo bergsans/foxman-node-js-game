@@ -2,27 +2,28 @@ const {
   drawLogo,
   drawMenu,
   drawState,
-  fps,
 } = require('./draw');
+const { FPS } = require('./constants');
 const nextState = require('./logic');
-const events = require('./event-handlers')();
+const eventHandler = require('./event-handlers')();
 const initialState = require('./init-game');
+const externalToLogic = require('./external-logic');
 
 // game loop
 const gameLoop = (currentState) => {
-  const { score, level } = currentState;
-  const { q, r } = events.getValues();
-  if (q) {
-    process.exit(0);
-  }
+  // side-effects
   console.clear();
-  drawLogo();
-  drawMenu(score);
-  drawState(level);
-  const state = r
+  const events = eventHandler.getValues();
+  externalToLogic.forEach((fn) => fn(currentState, events));
+  [drawLogo, drawMenu, drawState].forEach((fn) => fn(currentState));
+
+  // pure
+  const state = events.r
     ? ({ ...initialState })
-    : nextState(currentState, events);
-  events.reset();
-  setTimeout(() => gameLoop(state), fps);
+    : nextState(currentState, eventHandler);
+
+  // side-effects
+  eventHandler.reset();
+  setTimeout(() => gameLoop(state), FPS);
 };
 gameLoop(initialState);

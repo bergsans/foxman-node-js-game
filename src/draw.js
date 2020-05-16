@@ -1,27 +1,27 @@
-const { types, logo } = require('./graphics');
+const {
+  types,
+  logo,
+  win,
+  gameOver,
+} = require('./graphics');
+require('cli-cursor').hide();
 
-const makeScoreString = (scoreNumber) => {
-  let newScoreString;
-  if (scoreNumber < 10) {
-    newScoreString = `00${scoreNumber}`;
-  } else if (scoreNumber < 100) {
-    newScoreString = `0${scoreNumber}`;
-  } else {
-    newScoreString = scoreNumber.toString();
-  }
-  return newScoreString;
-};
-const drawMenu = (score) => console.log(`
+const drawWin = () => console.log(win);
+
+const drawGameOver = () => console.log(gameOver);
+
+const representNumberWithNDigits = (nDigitRepresentation) => (number) => number.toString().padStart(nDigitRepresentation, '0');
+
+const drawMenu = (state) => console.log(`
 ┌─────────────────────────────────────────────────────┐
-│  q: quit  ◈  r: restart  ◈              score: ${makeScoreString(score)}  │
+│  r: restart  ◈  q: quit  ◈  time: ${representNumberWithNDigits(5)(state.time)}  ◈  score: ${representNumberWithNDigits(3)(state.score)}  │
 └─────────────────────────────────────────────────────┘
 `);
-const ONE_SECOND = 1000;
-const updateSpeed = 10;
-const fps = ONE_SECOND / updateSpeed;
+
 const determineType = (type) => types[type];
-const drawState = (level) => console.log(
-  level
+
+const drawState = (state) => console.log(
+  state.level
     .map(
       (row) => row
         .map(determineType)
@@ -29,10 +29,13 @@ const drawState = (level) => console.log(
     )
     .join('\n'),
 );
+
 const drawLogo = () => console.log(logo);
+
 module.exports = {
   drawState,
   drawLogo,
   drawMenu,
-  fps,
+  drawGameOver,
+  drawWin,
 };

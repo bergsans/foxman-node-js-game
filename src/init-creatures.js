@@ -1,5 +1,7 @@
-const ALIVE = true;
+const { ALIVE, FOX, MONSTER } = require('./constants');
+
 const isCreature = (cell) => ['m', 'f'].includes(cell);
+
 const findCreatures = (row, i) => row.reduce(
   (creatures, cell, x) => (isCreature(cell)
     ? [...creatures, {
@@ -8,6 +10,7 @@ const findCreatures = (row, i) => row.reduce(
     : creatures),
   [],
 );
+
 const getCreatures = (level) => level
   .reduce(
     (creatures, creaturesOnRow, i) => (creaturesOnRow.some(isCreature)
@@ -15,15 +18,10 @@ const getCreatures = (level) => level
       : creatures),
     [],
   );
-const initCreatures = (level) => {
-  const creatures = getCreatures(level);
-  const monsters = creatures
-    .filter((c) => c.type === 'm')
-    .reduce((ms, m, i) => ({ ...ms, [i]: m }), {});
-  const [player] = creatures.filter((c) => c.type === 'f');
-  return {
-    player,
-    monsters,
-  };
-};
+
+const initCreatures = (level) => ({
+  player: getCreatures(level).filter((c) => c.type === FOX)[0],
+  monsters: getCreatures(level).filter((c) => c.type === MONSTER),
+});
+
 module.exports = initCreatures;

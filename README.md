@@ -1,1 +1,3 @@
-# foxman-node-js-game
+# foxman
+
+![foxman.gif](foxman.gif)

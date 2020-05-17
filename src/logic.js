@@ -4,52 +4,68 @@ const {
   WALL,
 } = require('./constants');
 
-const { isEntityAt } = require('./helpers');
+const { directions, isEntityAt } = require('./helpers');
 
-const isMovePossible = (creature, level, x, y) => level[creature.y + y][creature.x + x] !== WALL;
+const isMovePossible = (
+  creature,
+  level,
+  x,
+  y,
+) => level[creature.y + y][creature.x + x] !== WALL;
 
 const isMovingInDirection = (direction) => direction === true;
 
 const isPlayerAttemptingToMove = (e) => Object.values(e).some(isMovingInDirection);
 
-const attemptMove = (state, level, [x, y]) => (isMovePossible(state.player, level, x, y)
-  ? ({
-    x: state.player.x + x,
-    y: state.player.y + y,
-  })
-  : state.player);
+const attemptMove = (state, level, [x, y]) => (
+  isMovePossible(state.player, level, x, y)
+    ? ({
+      ...state.player,
+      x: state.player.x + x,
+      y: state.player.y + y,
+    })
+    : state.player
+);
 
 const getRandomInteger = (max) => Math.floor(Math.random() * Math.floor(max));
 
-const dirs = Object.values(MOVE_DIRECTIONS);
 const moveMonster = (monster, level) => {
-  const dir = dirs[getRandomInteger(4)];
-  const [mX, mY] = dir;
-  return isMovePossible(monster, level, mX, mY)
+  const direction = directions[getRandomInteger(4)];
+  const [x, y] = direction;
+  return isMovePossible(monster, level, x, y)
     ? ({
       ...monster,
-      x: monster.x + mX,
-      y: monster.y + mY,
+      x: monster.x + x,
+      y: monster.y + y,
     })
     : monster;
 };
 
-const isAtCredit = (position, credits, score) => {
-  if (credits.some((c) => isEntityAt(c, position.x, position.y))) {
-    return {
+const isAtCellWithCredit = (
+  position,
+  credits,
+  score,
+) => (
+  credits.some((c) => isEntityAt(c, position.x, position.y))
+    ? ({
       score: score + 1,
       credits: credits.filter((c) => !isEntityAt(c, position.x, position.y)),
-    };
-  }
-  return { score, credits };
-};
+    })
+    : ({ score, credits })
+);
+
+const playerNextTurn = (state, e) => (isPlayerAttemptingToMove(e.getValues())
+  ? attemptMove(state, state.level, MOVE_DIRECTIONS[e.getMoveDirection()])
+  : state.player);
 
 const nextState = (state, e) => {
-  const { score, credits } = isAtCredit(state.player, state.credits, state.score);
-  const player = isPlayerAttemptingToMove(e.getValues())
-    ? attemptMove(state, state.level, MOVE_DIRECTIONS[e.getMoveDirection()])
-    : state.player;
+  const { score, credits } = isAtCellWithCredit(state.player, state.credits, state.score);
+  const player = playerNextTurn(state, e);
   const monsters = state.monsters.map((m) => moveMonster(m, state.level));
+  const isHit = monsters.some((m) => isEntityAt(m, player.x, player.y));
+  if (isHit) {
+    player.isAlive = false;
+  }
   return {
     ...state,
     player,

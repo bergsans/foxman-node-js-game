@@ -9,9 +9,6 @@ const eventHandler = require('./event-handlers')();
 const initialState = require('./init-game');
 const externalToLogic = require('./external-logic');
 
-// credits
-// enemy types
-
 // game loop
 const gameLoop = (currentState) => {
   // side-effects

@@ -44,6 +44,7 @@ const moveMonster = (monster, state) => {
       y: monster.y + y,
     };
   }
+  // side-effect (ranomized direction)
   const direction = directions[getRandomInteger(4)];
   const [x, y] = direction;
   return isMovePossible(monster, state.level, x, y)

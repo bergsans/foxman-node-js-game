@@ -21,7 +21,6 @@ const drawMenu = (state) => console.log(`
         └───────────────┴──────────────┴───────────────┴───────────────┘
 `);
 
-
 const determineType = (state, x, y) => {
   if (isEntityAt(state.player, x, y)) {
     return types.fox;

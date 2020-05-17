@@ -4,11 +4,11 @@ const isEntityAt = (c, x, y) => c.x === x && c.y === y;
 
 const directions = Object.values(MOVE_DIRECTIONS);
 
-function findPath(
+const findPath = (
   level,
   startCoordinates,
   endCoordinates,
-) {
+) => {
   const grid = level.map((el) => [...el]);
   const queue = [
     {
@@ -21,9 +21,6 @@ function findPath(
   grid[endCoordinates.y][endCoordinates.x] = 'G';
   while (queue.length > 0) {
     const currentLocation = queue.shift();
-    if (currentLocation === undefined) {
-      continue;
-    }
     for (const [direction, diffs] of Object.entries(MOVE_DIRECTIONS)) {
       const newPath = currentLocation.path.slice();
       newPath.push(direction);
@@ -56,8 +53,8 @@ function findPath(
       }
     }
   }
-  return false;
-}
+  throw new Error('Monster did not find path. Should be impossible in this setting!');
+};
 
 module.exports = {
   isEntityAt,

@@ -9,7 +9,7 @@ const quit = (withMessage) => {
 };
 
 const externalToLogic = [
-  (s) => s.score > 150 && quit(drawWin),
+  (s) => s.score > 200 && quit(drawWin),
   (_, e) => e.q && quit(),
   (s) => s.time <= 0 && quit(drawGameOver),
 ];

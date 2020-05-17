@@ -1,27 +1,37 @@
-const { ALIVE, FOX, MONSTER } = require('./constants');
+const {types} = require('./graphics');
+const {ogre,octupus,ghost,alien} = types;
 
-const isCreature = (cell) => ['m', 'f'].includes(cell);
-
-const findCreatures = (row, i) => row.reduce(
-  (creatures, cell, x) => (isCreature(cell)
-    ? [...creatures, {
-      x, y: i, type: cell, status: ALIVE,
-    }]
-    : creatures),
-  [],
-);
-
-const getCreatures = (level) => level
-  .reduce(
-    (creatures, creaturesOnRow, i) => (creaturesOnRow.some(isCreature)
-      ? [...creatures, ...findCreatures(creaturesOnRow, i)]
-      : creatures),
-    [],
-  );
-
-const initCreatures = (level) => ({
-  player: getCreatures(level).filter((c) => c.type === FOX)[0],
-  monsters: getCreatures(level).filter((c) => c.type === MONSTER),
-});
+const initCreatures = {
+  player: {
+    x: 1,
+    y: 1,
+  },
+  monsters: [
+    {
+      x: 10,
+      y: 1,
+      isChasing: true,
+      type: ogre
+    },
+    {
+      x: 8,
+      y: 1,
+      isChasing: true,
+      type: ghost
+    },
+    {
+      x: 8,
+      y: 1,
+      isChasing: true,
+      type: octupus 
+    },
+    {
+      x: 8,
+      y: 1,
+      isChasing: true,
+      type: alien
+    },
+  ],
+};
 
 module.exports = initCreatures;

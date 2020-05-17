@@ -1,54 +1,63 @@
 const {
   MOVE_DIRECTIONS,
-  MONSTER,
   UPDATE_VARIANT,
-  FOX,
   WALL,
-  FLOOR,
-  CREDITS,
 } = require('./constants');
 
-const isMovePossible = (state, moveX, moveY) => state.level[state.player.y + moveY][state.player.x + moveX] !== WALL;
+const { isEntityAt } = require('./helpers');
+
+const isMovePossible = (creature, level, x, y) => level[creature.y + y][creature.x + x] !== WALL;
 
 const isMovingInDirection = (direction) => direction === true;
 
 const isPlayerAttemptingToMove = (e) => Object.values(e).some(isMovingInDirection);
 
-const copyLevel = (level) => level.map((row) => [...row]);
+const attemptMove = (state, level, [x, y]) => (isMovePossible(state.player, level, x, y)
+  ? ({
+    x: state.player.x + x,
+    y: state.player.y + y,
+  })
+  : state.player);
 
-const attemptMove = (state, level, [moveX, moveY]) => {
-  if (isMovePossible(state, moveX, moveY)) {
-    const x = state.player.x + moveX;
-    const y = state.player.y + moveY;
-    const score = level[y][x] === CREDITS
-      ? state.score + 1
-      : state.score;
-    level[state.player.y][state.player.x] = FLOOR;
-    level[y][x] = FOX;
-    const newState = {
-      ...state,
-      player: {
-        x,
-        y,
-      },
-      score,
-      level,
+const getRandomInteger = (max) => Math.floor(Math.random() * Math.floor(max));
+
+const dirs = Object.values(MOVE_DIRECTIONS);
+const moveMonster = (monster, level) => {
+  const dir = dirs[getRandomInteger(4)];
+  const [mX, mY] = dir;
+  return isMovePossible(monster, level, mX, mY)
+    ? ({
+      ...monster,
+      x: monster.x + mX,
+      y: monster.y + mY,
+    })
+    : monster;
+};
+
+const isAtCredit = (position, credits, score) => {
+  if (credits.some((c) => isEntityAt(c, position.x, position.y))) {
+    return {
+      score: score + 1,
+      credits: credits.filter((c) => !isEntityAt(c, position.x, position.y)),
     };
-    return newState;
   }
-  return { ...state };
+  return { score, credits };
 };
 
 const nextState = (state, e) => {
-  const newLevel = copyLevel(state.level);
-  const playerTurn = isPlayerAttemptingToMove(e.getValues())
-    ? attemptMove(state, newLevel, MOVE_DIRECTIONS[e.getMoveDirection()])
-    : state;
+  const { score, credits } = isAtCredit(state.player, state.credits, state.score);
+  const player = isPlayerAttemptingToMove(e.getValues())
+    ? attemptMove(state, state.level, MOVE_DIRECTIONS[e.getMoveDirection()])
+    : state.player;
+  const monsters = state.monsters.map((m) => moveMonster(m, state.level));
   return {
-    ...playerTurn,
+    ...state,
+    player,
+    monsters,
+    score,
+    credits,
     time: state.time - UPDATE_VARIANT,
   };
 };
-
 
 module.exports = nextState;

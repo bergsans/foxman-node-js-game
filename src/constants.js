@@ -13,7 +13,7 @@ const CREDITS = ' ';
 
 const ONE_SECOND = 1000;
 
-const UPDATE_VARIANT = 15;
+const UPDATE_VARIANT = 10;
 
 const FPS = ONE_SECOND / UPDATE_VARIANT;
 

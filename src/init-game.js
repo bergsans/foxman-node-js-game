@@ -9,6 +9,7 @@ const initialState = {
   time: 20000,
   credits,
   counter: 0,
+  chaseCounter: 0,
 };
 
 module.exports = initialState;

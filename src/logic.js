@@ -2,6 +2,7 @@ const {
   MOVE_DIRECTIONS,
   UPDATE_VARIANT,
   WALL,
+  CHASE_MAX,
 } = require('./constants');
 
 const { findPath, directions, isEntityAt } = require('./helpers');
@@ -30,11 +31,25 @@ const attemptMove = (state, level, [x, y]) => (
 const getRandomInteger = (max) => Math.floor(Math.random() * Math.floor(max));
 
 const moveMonster = (monster, state) => {
-  const direction = findPath(state.level, monster, state.player)[0];
-  const [x, y] = MOVE_DIRECTIONS[direction];
+  const isChasing = state.chaseCounter === CHASE_MAX
+    ? !monster.isChasing
+    : monster.isChasing;
+  if (isChasing) {
+    const direction = findPath(state.level, monster, state.player)[0];
+    const [x, y] = MOVE_DIRECTIONS[direction];
+    return {
+      ...monster,
+      isChasing,
+      x: monster.x + x,
+      y: monster.y + y,
+    };
+  }
+  const direction = directions[getRandomInteger(4)];
+  const [x, y] = direction;
   return isMovePossible(monster, state.level, x, y)
     ? ({
       ...monster,
+      isChasing,
       x: monster.x + x,
       y: monster.y + y,
     })
@@ -76,6 +91,7 @@ const nextState = (state, e) => {
     credits,
     time: state.time - UPDATE_VARIANT,
     counter: state.counter > 3 ? 0 : state.counter + 1,
+    chaseCounter: state.chaseCounter > CHASE_MAX ? 0 : state.chaseCounter + 1,
   };
 };
 

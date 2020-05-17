@@ -17,6 +17,8 @@ const UPDATE_VARIANT = 10;
 
 const FPS = ONE_SECOND / UPDATE_VARIANT;
 
+const CHASE_MAX = 15;
+
 module.exports = {
   MOVE_DIRECTIONS,
   FLOOR,
@@ -24,4 +26,5 @@ module.exports = {
   FPS,
   CREDITS,
   UPDATE_VARIANT,
+  CHASE_MAX,
 };

@@ -10,6 +10,8 @@ This game is not finished and will never be. It's only a small demo.
 
 Why use node.js? Why not. :)
 
+FOXMAN? I enjoy Firefox. Also, I am a member of a [secret spy organization](https://herebeseaswines.net/ravarna/), have made the demo named [Operation Fox](https://herebeseaswines.net/operation-fox/) using hand-drawn graphics and a cli tool named [foxy dev tools](https://github.com/claes-magnus/foxy-dev-tools). It's fair to say I like foxes in general.
+
 ## Setup
 ```
 npm install

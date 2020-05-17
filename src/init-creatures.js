@@ -12,8 +12,8 @@ const initCreatures = {
   },
   monsters: [
     {
-      x: 10,
-      y: 9,
+      x: 31,
+      y: 1,
       isChasing: true,
       type: ogre,
     },
@@ -24,14 +24,14 @@ const initCreatures = {
       type: ghost,
     },
     {
-      x: 8,
-      y: 9,
+      x: 31,
+      y: 18,
       isChasing: true,
       type: octupus,
     },
     {
-      x: 8,
-      y: 9,
+      x: 1,
+      y: 18,
       isChasing: true,
       type: alien,
     },

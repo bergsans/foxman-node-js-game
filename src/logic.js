@@ -4,7 +4,7 @@ const {
   WALL,
 } = require('./constants');
 
-const { directions, isEntityAt } = require('./helpers');
+const { findPath, directions, isEntityAt } = require('./helpers');
 
 const isMovePossible = (
   creature,
@@ -29,10 +29,10 @@ const attemptMove = (state, level, [x, y]) => (
 
 const getRandomInteger = (max) => Math.floor(Math.random() * Math.floor(max));
 
-const moveMonster = (monster, level) => {
-  const direction = directions[getRandomInteger(4)];
-  const [x, y] = direction;
-  return isMovePossible(monster, level, x, y)
+const moveMonster = (monster, state) => {
+  const direction = findPath(state.level, monster, state.player)[0];
+  const [x, y] = MOVE_DIRECTIONS[direction];
+  return isMovePossible(monster, state.level, x, y)
     ? ({
       ...monster,
       x: monster.x + x,
@@ -61,7 +61,9 @@ const playerNextTurn = (state, e) => (isPlayerAttemptingToMove(e.getValues())
 const nextState = (state, e) => {
   const { score, credits } = isAtCellWithCredit(state.player, state.credits, state.score);
   const player = playerNextTurn(state, e);
-  const monsters = state.monsters.map((m) => moveMonster(m, state.level));
+  const monsters = state.counter === 3
+    ? state.monsters.map((m) => moveMonster(m, state))
+    : state.monsters;
   const isHit = monsters.some((m) => isEntityAt(m, player.x, player.y));
   if (isHit) {
     player.isAlive = false;
@@ -73,6 +75,7 @@ const nextState = (state, e) => {
     score,
     credits,
     time: state.time - UPDATE_VARIANT,
+    counter: state.counter > 3 ? 0 : state.counter + 1,
   };
 };
 

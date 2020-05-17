@@ -16,9 +16,9 @@ const drawGameOver = () => console.log(gameOver);
 const representNumberWithNDigits = (nDigitRepresentation) => (number) => number.toString().padStart(nDigitRepresentation, '0');
 
 const drawMenu = (state) => console.log(`
-┌───────────────┬──────────────┬───────────────┬───────────────┐
-│  r: restart   │  q: quit     │  time: ${representNumberWithNDigits(5)(state.time)}  │  score: ${representNumberWithNDigits(3)(state.score)}   │
-└───────────────┴──────────────┴───────────────┴───────────────┘
+        ┌───────────────┬──────────────┬───────────────┬───────────────┐
+        │  r: restart   │  q: quit     │  time: ${representNumberWithNDigits(5)(state.time)}  │  score: ${representNumberWithNDigits(3)(state.score)}   │
+        └───────────────┴──────────────┴───────────────┴───────────────┘
 `);
 
 
